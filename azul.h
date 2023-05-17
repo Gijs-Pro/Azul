@@ -21,14 +21,18 @@ class Azul
     // Destructor
     ~Azul ();
 
+    void testFunctie();
+
     // Getters voor hoogte en breedte
     int getHoogte()
     { return hoogte;
     }
+    //DONE
 
     int getBreedte()
     { return breedte;
     }
+    //DONE
 
     // Getter voor de inhoud van vakje (rij,kolom) op het bord
     // (rijen genummerd van 0..hoogte-1, van boven naar beneden,
@@ -40,6 +44,7 @@ class Azul
     // * 0 als (rij,kolom) wel een geldig vakje en niet bedekt is
     // * 1 als (rij,kolom) wel een geldig vakje en bedekt is
     int getVakje(int rij, int kolom);
+    //DONE
 
     // Lees vanuit invoerNaam een bord in, met eventueel al tegels daarop.
     // Controleer of:
@@ -58,12 +63,14 @@ class Azul
     //   bij andere memberfuncties gecontroleerd kan worden of er een geldig
     //   bord is waarvoor die functies kunnen worden uitgevoerd.
     bool leesInBord (const char* invoerNaam);
+    //DONE
 
     // Druk het huidige bord overzichtelijk af op het scherm.
     // Vermeld ook de totaalscore tot nu toe (vanaf het begin van het spel
     // of het inlezen van een bord).
     // Controleer eerst of er een geldig bord is.
     void drukAfBord ();
+    //DONE
 
     // Doe de zet waarbij een tegel wordt gelegd op vakje (rij,kolom).
     // Controleer eerst of
@@ -77,6 +84,10 @@ class Azul
     // * Als de returnwaarde true is, is vakje (rij,kolom) ook bedekt.
     // * Anders is de bedekking van het bord niet veranderd.
     bool doeZet (int rij, int kolom);
+    //DONE
+
+    bool magZet(pair<int,int> coords);
+    //DONE
 
     // Maak de laatst gedane zet ongedaan.
     // Controleer eerst of
@@ -90,6 +101,7 @@ class Azul
     //   weer onbedekt.
     // * Anders is de bedekking van het bord niet veranderd.
     bool unDoeZet ();
+    //DONE
 
     // Bepaal rechtstreeks recursief de minimale en de maximale totaalscore
     // die gehaald kunnen worden als je het bord compleet wil bedekken met
@@ -160,11 +172,23 @@ class Azul
                               vector<pair <int,int> > &zettenReeksMaxi);
 
   private:
-    int hoogte, breedte;   // hoogte, breedte van het bord
+    int hoogte, breedte,   // hoogte, breedte van het bord
+        totaalScore;
+    bool bord[MaxDimensie][MaxDimensie];
+    bool geldigBord;
+    vector< pair<int,int> > vZetten;
+
 
   // TODO: uw eigen private memberfuncties en -variabelen
 
 };
 
 #endif
+
+//TODO:
+//-bepaalMiniMaxiScoreRec
+//-bepaalMiniMaxiScoreTD
+//-bepaalMiniMaxiScoreBU
+//-drukAfZettenReeksen
+//-doeExperimenten
 

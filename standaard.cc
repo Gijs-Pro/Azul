@@ -5,8 +5,6 @@
 #include "standaard.h"
 using namespace std;
 
-//*************************************************************************
-
 bool integerInBereik (const char *variabele, int waarde,
                       int minWaarde, int maxWaarde)
 {
@@ -20,8 +18,6 @@ bool integerInBereik (const char *variabele, int waarde,
 
 }  // integerInBereik
 
-//*************************************************************************
-
 bool integerInBereik (int waarde, int minWaarde, int maxWaarde)
 {
   if (waarde>=minWaarde && waarde<=maxWaarde)
@@ -30,8 +26,6 @@ bool integerInBereik (int waarde, int minWaarde, int maxWaarde)
     return false;
 
 }  // integerInBereik
-
-//*************************************************************************
 
 bool integerPositief (const char *variabele, int waarde)
 {
@@ -46,8 +40,6 @@ bool integerPositief (const char *variabele, int waarde)
 
 }  // integerPositief
 
-//*************************************************************************
-
 int randomGetal (int min, int max)
 { int bereik,
       r;
@@ -58,8 +50,6 @@ int randomGetal (int min, int max)
   return r;
 
 }  // randomGetal
-
-//*************************************************************************
 
 bool komtVoor (int waarde, vector<int> waardes)
 { int grootte = waardes.size();
@@ -73,8 +63,6 @@ bool komtVoor (int waarde, vector<int> waardes)
 
 }  // komtVoor
 
-//*************************************************************************
-
 bool geefBit (int getal, int i)
 {
   if (i<0)
@@ -86,4 +74,3 @@ bool geefBit (int getal, int i)
     return false;
 
 }  // geefBit
-

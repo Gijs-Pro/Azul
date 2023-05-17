@@ -12,7 +12,8 @@
 // - met top-down DP de minimale en maximale score te bepalen
 // - met bott-up DP de minimale en maximale score te bepalen
 //
-// Namen studenten, datum
+// Gijs Turkenburg (s3573532)
+// Winston Vonk (s3713598)
 
 #include <iostream>
 #include <vector>
@@ -21,8 +22,6 @@
 #include "azul.h"
 using namespace std;
 const int MaxBestandsNaamLengte = 30; // maximale lengte van een bestandsnaam
-
-//*************************************************************************
 
 // Schrijf het menu voor het spel op het scherm, en vraag een keuze
 // van de gebruiker.
@@ -41,6 +40,7 @@ int keuzeUitMenu ()
        << endl;
   cout << "  (bottom-up DP)" << endl;
   cout << "6. Stoppen met dit spel" << endl;
+  cout << "7. Debuggen van de code" << endl;
   cout << endl;
   cout << "Maak een keuze: ";
   cin >> keuze;
@@ -48,8 +48,6 @@ int keuzeUitMenu ()
   return keuze;
 
 }  // keuzeUitMenu
-
-//*************************************************************************
 
 // Schrijf het menu voor de experimenten op het scherm, en vraag een keuze
 // van de gebruiker.
@@ -75,8 +73,6 @@ int keuzeUitMenu2 ()
   return keuze;
 
 }  // keuzeUitMenu2
-
-//*************************************************************************
 
 // Bied de gebruiker een menu om voor bord a1
 // * een zet te doen
@@ -134,6 +130,8 @@ void menuVoorBord (Azul *a1)
                      maxi, volgordesMaxi, zettenReeksMini, zettenReeksMaxi);
               break;
       case 6: break;
+      case 7: a1 -> testFunctie();
+              break;
       default: cout << "Voer een goede keuze in!" << endl;
     }  // switch
     t2 = clock ();
@@ -159,8 +157,6 @@ void menuVoorBord (Azul *a1)
 
 }  // menuVoorBord
 
-//*************************************************************************
-
 // Voer de experimenten uit, zoals beschreven in de opdracht.
 void doeExperimenten ()
 { int keuze;
@@ -176,8 +172,6 @@ void doeExperimenten ()
   }  // while
 
 }  // doeExperimenten
-
-//*************************************************************************
 
 void hoofdmenu ()
 { Azul *a1;  // pointer, om makkeijk nieuwe objecten te kunnen maken
@@ -210,8 +204,7 @@ void hoofdmenu ()
       case 2: a1 = new Azul ();
               cout << "Geef de naam van het tekstbestand met de invoer: ";
               cin >> invoerNaam;
-              if (a1 -> leesInBord (invoerNaam))
-              { a1 -> drukAfBord ();
+              if (a1 -> leesInBord (invoerNaam)){ 
                 menuVoorBord (a1);
               }
               delete a1;  // netjes opruimen
@@ -226,8 +219,6 @@ void hoofdmenu ()
   } while (keuze!=4);
 
 }  // hoofdmenu
-
-//*************************************************************************
   
 int main ()
 {
@@ -237,3 +228,5 @@ int main ()
   return 0;
 
 }
+
+//TODO: doeExperimenten
