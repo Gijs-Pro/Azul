@@ -231,6 +231,7 @@ void hoofdmenu ()
   
 int main ()
 {
+  cout << "pils" << endl;
   hoofdmenu ();
 
   return 0;
