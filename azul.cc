@@ -122,6 +122,59 @@ bool Azul::magZet(pair<int,int> coords)
   return false;
 }
 
+void Azul::verwerkZet(pair<int,int> coords)
+{
+  int scoreV = 1;
+  int scoreH = 1;
+  int rijWalker = coords.first;
+  int kolomWalker = coords.second;
+  //scoreV en scoreH bepalen:
+  //walken omhoog:
+  while(rijWalker != 0 && bord[rijWalker-1][kolomWalker] == 1){
+    scoreV++;
+    rijWalker--;
+  }
+  rijWalker = coords.first;//resetten voor de volgende while
+  //walken omlaag:
+  while(rijWalker != hoogte - 1 && bord[rijWalker + 1][kolomWalker] == 1){
+    cout << "deze doe je 1x" << endl;
+    scoreV++;
+    rijWalker++;
+  }
+  rijWalker = coords.first;//resetten voor de volgende while
+  //walken links;
+  while(kolomWalker != 0 && bord[rijWalker][kolomWalker - 1] == 1){
+    cout << "deze doe je ook 1x" << endl;
+    scoreH++;
+    kolomWalker--;
+  }
+  kolomWalker = coords.second;//resetten voor de volgende while
+  //walken rechts;
+  while(kolomWalker != breedte - 1 && bord[rijWalker][kolomWalker + 1] == 1){
+    cout << "deze doe je NIET" << endl;
+    scoreH++;
+    kolomWalker++;
+  }
+
+  cout << scoreV << " " << scoreH << endl;
+  //gevalsonderscheiding voor het ophogen van totaalScore
+  if(scoreH == 1){
+    vScoreOphogingen.push_back(scoreV);
+    totaalScore += scoreV;
+    cout << "een" << endl;
+  }
+  else if(scoreV == 1){
+    vScoreOphogingen.push_back(scoreH);
+    totaalScore += scoreH;
+    cout << "twee" << endl;
+  }
+  else{
+    vScoreOphogingen.push_back(scoreV + scoreH);
+    totaalScore += scoreV + scoreH;
+    cout << "drei" << endl;
+  }
+}
+
 bool Azul::doeZet (int rij, int kolom)
 {
   if(geldigBord){
@@ -129,6 +182,8 @@ bool Azul::doeZet (int rij, int kolom)
     if(magZet(coords)){
       vZetten.push_back(coords);
       bord[rij][kolom] = 1;
+      verwerkZet(coords);
+
       return true;
     }
   }
@@ -140,6 +195,8 @@ bool Azul::unDoeZet ()
   if(vZetten.size() != 0 || !geldigBord){
     bord[vZetten.back().first][vZetten.back().second] = 0;
     vZetten.pop_back();
+    totaalScore -=vScoreOphogingen.back();
+    vScoreOphogingen.pop_back();
     return true;
   }
   return false;
@@ -148,11 +205,18 @@ bool Azul::unDoeZet ()
 bool Azul::bepaalMiniMaxiScoreRec (int &mini, long long &volgordesMini,
                                    int &maxi, long long &volgordesMaxi)
 {
-  // TODO: implementeer deze memberfunctie
-  
+  if(geldigBord){
+
+  }
   return false;
 
 }  // bepaalMiniMaxiScoreRec
+
+bool Azul::bepaalMiniMaxiScoreRec_p (int &mini, long long &volgordesMini,
+                                   int &maxi, long long &volgordesMaxi)
+{
+  return false;
+}
 
 bool Azul::bepaalMiniMaxiScoreTD (int &mini, long long &volgordesMini,
                                   int &maxi, long long &volgordesMaxi)

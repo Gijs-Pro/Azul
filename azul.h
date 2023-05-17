@@ -86,6 +86,8 @@ class Azul
     bool doeZet (int rij, int kolom);
     //DONE
 
+    void verwerkZet(pair<int,int> coords);
+
     bool magZet(pair<int,int> coords);
     //DONE
 
@@ -116,6 +118,9 @@ class Azul
     //   maxi en volgordesMaxi de gezochte waardes.
     // * De bedekking van het bord is niet veranderd.
     bool bepaalMiniMaxiScoreRec (int &mini, long long &volgordesMini,
+                                 int &maxi, long long &volgordesMaxi);
+
+    bool bepaalMiniMaxiScoreRec_p (int &mini, long long &volgordesMini,
                                  int &maxi, long long &volgordesMaxi);
     
     // Bepaal met top-down dynamisch programmeren de minimale en de maximale
@@ -177,6 +182,7 @@ class Azul
     bool bord[MaxDimensie][MaxDimensie];
     bool geldigBord;
     vector< pair<int,int> > vZetten;
+    vector<int> vScoreOphogingen;
 
 
   // TODO: uw eigen private memberfuncties en -variabelen
