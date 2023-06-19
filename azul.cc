@@ -137,41 +137,34 @@ void Azul::verwerkZet(pair<int,int> coords)
   rijWalker = coords.first;//resetten voor de volgende while
   //walken omlaag:
   while(rijWalker != hoogte - 1 && bord[rijWalker + 1][kolomWalker] == 1){
-    cout << "deze doe je 1x" << endl;
     scoreV++;
     rijWalker++;
   }
   rijWalker = coords.first;//resetten voor de volgende while
   //walken links;
   while(kolomWalker != 0 && bord[rijWalker][kolomWalker - 1] == 1){
-    cout << "deze doe je ook 1x" << endl;
     scoreH++;
     kolomWalker--;
   }
   kolomWalker = coords.second;//resetten voor de volgende while
   //walken rechts;
   while(kolomWalker != breedte - 1 && bord[rijWalker][kolomWalker + 1] == 1){
-    cout << "deze doe je NIET" << endl;
     scoreH++;
     kolomWalker++;
   }
 
-  cout << scoreV << " " << scoreH << endl;
   //gevalsonderscheiding voor het ophogen van totaalScore
   if(scoreH == 1){
     vScoreOphogingen.push_back(scoreV);
     totaalScore += scoreV;
-    cout << "een" << endl;
   }
   else if(scoreV == 1){
     vScoreOphogingen.push_back(scoreH);
     totaalScore += scoreH;
-    cout << "twee" << endl;
   }
   else{
     vScoreOphogingen.push_back(scoreV + scoreH);
     totaalScore += scoreV + scoreH;
-    cout << "drei" << endl;
   }
 }
 
@@ -206,8 +199,22 @@ bool Azul::bepaalMiniMaxiScoreRec (int &mini, long long &volgordesMini,
                                    int &maxi, long long &volgordesMaxi)
 {
   if(geldigBord){
-
+    //We hebben een manier nodig om alle bedekkingen van het bord af te gaan
+    //Deze aanroep is de eerste, initialiseren de waardes,roepen de functie 
+    //aan en returnen de waardes:
+    mini = 0; maxi = 0; volgordesMini = 0; volgordesMaxi = 0;
+    bepaalMiniMaxiScoreRec_p(mini, volgordesMini, maxi, volgordesMaxi);
+    cout << "De minimale score is ";
+    cout << kleurGroen << mini << kleurWit;
+    cout << ", en de maximale score is ";
+    cout << kleurBlauw << maxi << kleurWit<< endl;
+    cout << "Het aantal volgordes voor de minimale score is ";
+    cout << kleurGroen << volgordesMini;
+    cout << ", en het aantal volgorde voor de maximale score is ";
+    cout << kleurBlauw << volgordesMaxi << endl;
+    return true;
   }
+  cout << "geen geldig bord" << endl;
   return false;
 
 }  // bepaalMiniMaxiScoreRec
