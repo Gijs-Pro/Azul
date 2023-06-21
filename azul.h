@@ -86,7 +86,8 @@ class Azul
     bool doeZet (int rij, int kolom);
     //DONE
 
-    void verwerkZet(pair<int,int> coords);
+    int verwerkZet(pair<int,int> coords);
+
 
     bool magZet(pair<int,int> coords);
     //DONE
@@ -105,6 +106,12 @@ class Azul
     bool unDoeZet ();
     //DONE
 
+    bool bordLeeg ();
+
+    bool bordVol ();
+
+    void drukaftabel(int tabel[][5]);
+
     // Bepaal rechtstreeks recursief de minimale en de maximale totaalscore
     // die gehaald kunnen worden als je het bord compleet wil bedekken met
     // tegels, uitgaande van de huidige bedekking van het bord.
@@ -120,7 +127,7 @@ class Azul
     bool bepaalMiniMaxiScoreRec (int &mini, long long &volgordesMini,
                                  int &maxi, long long &volgordesMaxi);
 
-    bool bepaalMiniMaxiScoreRec_p (int &mini, long long &volgordesMini,
+    void bepaalMiniMaxiScoreRec_p (int &mini, long long &volgordesMini,
                                  int &maxi, long long &volgordesMaxi);
     
     // Bepaal met top-down dynamisch programmeren de minimale en de maximale
@@ -137,6 +144,8 @@ class Azul
     // * De bedekking van het bord is niet veranderd.
     bool bepaalMiniMaxiScoreTD (int &mini, long long &volgordesMini, 
                                 int &maxi, long long &volgordesMaxi);
+
+    void bepaalMiniMaxiScoreTD_p (int tabel[][5], int getal, int verbWaardes);
 
     // Bepaal met bottom-up dynamisch programmeren de minimale en de maximale
     // totaalscore die gehaald kunnen worden als je het bord compleet wil
@@ -182,7 +191,6 @@ class Azul
     bool bord[MaxDimensie][MaxDimensie];
     bool geldigBord;
     vector< pair<int,int> > vZetten;
-    vector<int> vScoreOphogingen;
 
 
   // TODO: uw eigen private memberfuncties en -variabelen
