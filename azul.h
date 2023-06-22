@@ -110,7 +110,7 @@ class Azul
 
     bool bordVol ();
 
-    void drukaftabel(int tabel[][5]);
+    void drukaftabel(long long tabel[][5]);
 
     // Bepaal rechtstreeks recursief de minimale en de maximale totaalscore
     // die gehaald kunnen worden als je het bord compleet wil bedekken met
@@ -129,6 +129,8 @@ class Azul
 
     void bepaalMiniMaxiScoreRec_p (int &mini, long long &volgordesMini,
                                  int &maxi, long long &volgordesMaxi);
+
+    void vulTabelDefault(long long tabel[][5], int getal);
     
     // Bepaal met top-down dynamisch programmeren de minimale en de maximale
     // totaalscore die gehaald kunnen worden als je het bord compleet wil
@@ -145,7 +147,9 @@ class Azul
     bool bepaalMiniMaxiScoreTD (int &mini, long long &volgordesMini, 
                                 int &maxi, long long &volgordesMaxi);
 
-    void bepaalMiniMaxiScoreTD_p (int tabel[][5], int getal, int verbWaardes);
+    void zetInTabel(int getal, int tempGetal, int verschil, long long tabel[][5]);
+
+    void bepaalMiniMaxiScoreTD_p (long long tabel[][5], int getal, int verbWaardes);
 
     // Bepaal met bottom-up dynamisch programmeren de minimale en de maximale
     // totaalscore die gehaald kunnen worden als je het bord compleet wil
