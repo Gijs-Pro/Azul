@@ -109,6 +109,7 @@ class Azul
     bool bordVol ();
 
     void drukaftabel(long long tabel[][5]);
+    void drukaftabel2(int tabel[][2]);
 
     // Bepaal rechtstreeks recursief de minimale en de maximale totaalscore
     // die gehaald kunnen worden als je het bord compleet wil bedekken met
@@ -173,8 +174,7 @@ class Azul
                                 vector< pair<int,int> > &zettenReeksMaxi);
     //DONE
 
-    void vindReeksen (long long tabel[][5], int getal, int verbWaardes,
-                vector <int> aantalTegels[], 
+    void vindReeksen (int voorlopers[][2], int getal, 
                 vector< pair<int,int> > &zettenReeksMini,
                 vector< pair<int,int> > &zettenReeksMaxi);
 
