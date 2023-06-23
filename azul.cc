@@ -4,6 +4,7 @@
 #include <fstream>
 #include "standaard.h"
 #include "azul.h"
+#include <limits.h>
 using namespace std;
 
 Azul::Azul ()
