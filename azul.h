@@ -1,4 +1,5 @@
 // Definitie van klasse Azul
+// (de tab size van dit bestand staat op 4 spaties)
 
 #ifndef AzulHVar  // voorkom dat dit bestand meerdere keren
 #define AzulHVar  // ge-include wordt
@@ -21,18 +22,14 @@ class Azul
     // Destructor
     ~Azul ();
 
-    void testFunctie();
-
     // Getters voor hoogte en breedte
     int getHoogte()
     { return hoogte;
     }
-    //DONE
 
     int getBreedte()
     { return breedte;
     }
-    //DONE
 
     // Getter voor de inhoud van vakje (rij,kolom) op het bord
     // (rijen genummerd van 0..hoogte-1, van boven naar beneden,
@@ -44,7 +41,6 @@ class Azul
     // * 0 als (rij,kolom) wel een geldig vakje en niet bedekt is
     // * 1 als (rij,kolom) wel een geldig vakje en bedekt is
     int getVakje(int rij, int kolom);
-    //DONE
 
     // Lees vanuit invoerNaam een bord in, met eventueel al tegels daarop.
     // Controleer of:
@@ -63,14 +59,12 @@ class Azul
     //   bij andere memberfuncties gecontroleerd kan worden of er een geldig
     //   bord is waarvoor die functies kunnen worden uitgevoerd.
     bool leesInBord (const char* invoerNaam);
-    //DONE
 
     // Druk het huidige bord overzichtelijk af op het scherm.
     // Vermeld ook de totaalscore tot nu toe (vanaf het begin van het spel
     // of het inlezen van een bord).
     // Controleer eerst of er een geldig bord is.
     void drukAfBord ();
-    //DONE
 
     // Doe de zet waarbij een tegel wordt gelegd op vakje (rij,kolom).
     // Controleer eerst of
@@ -84,13 +78,6 @@ class Azul
     // * Als de returnwaarde true is, is vakje (rij,kolom) ook bedekt.
     // * Anders is de bedekking van het bord niet veranderd.
     bool doeZet (int rij, int kolom);
-    //DONE
-
-    int verwerkZet(pair<int,int> coords);
-
-
-    bool magZet(pair<int,int> coords);
-    //DONE
 
     // Maak de laatst gedane zet ongedaan.
     // Controleer eerst of
@@ -104,12 +91,6 @@ class Azul
     //   weer onbedekt.
     // * Anders is de bedekking van het bord niet veranderd.
     bool unDoeZet ();
-    //DONE
-
-    bool bordVol ();
-
-    void drukaftabel(long long tabel[][5]);
-    void drukaftabel2(int tabel[][2]);
 
     // Bepaal rechtstreeks recursief de minimale en de maximale totaalscore
     // die gehaald kunnen worden als je het bord compleet wil bedekken met
@@ -125,11 +106,6 @@ class Azul
     // * De bedekking van het bord is niet veranderd.
     bool bepaalMiniMaxiScoreRec (int &mini, long long &volgordesMini,
                                  int &maxi, long long &volgordesMaxi);
-
-    void bepaalMiniMaxiScoreRec_p (int &mini, long long &volgordesMini,
-                                 int &maxi, long long &volgordesMaxi);
-
-    void vulTabelDefault(long long tabel[][5], int getal, int verbWaardes);
     
     // Bepaal met top-down dynamisch programmeren de minimale en de maximale
     // totaalscore die gehaald kunnen worden als je het bord compleet wil
@@ -145,10 +121,6 @@ class Azul
     // * De bedekking van het bord is niet veranderd.
     bool bepaalMiniMaxiScoreTD (int &mini, long long &volgordesMini, 
                                 int &maxi, long long &volgordesMaxi);
-
-    void zetInTabel(int getal, int tempGetal, int verschil, long long tabel[][5]);
-
-    void bepaalMiniMaxiScoreTD_p (long long tabel[][5], int getal, int verbWaardes);
 
     // Bepaal met bottom-up dynamisch programmeren de minimale en de maximale
     // totaalscore die gehaald kunnen worden als je het bord compleet wil
@@ -172,11 +144,6 @@ class Azul
                                 int &maxi, long long &volgordesMaxi,
                                 vector< pair<int,int> > &zettenReeksMini,
                                 vector< pair<int,int> > &zettenReeksMaxi);
-    //DONE
-
-    void vindReeksen (int voorlopers[][2], int getal, 
-                vector< pair<int,int> > &zettenReeksMini,
-                vector< pair<int,int> > &zettenReeksMaxi);
 
     // Druk zettenreeksen zettenReeksMini en zettenReeksMaxi af op het scherm,
     // samen met de scores die de reeksen opleveren, uitgaande van
@@ -200,17 +167,34 @@ class Azul
     bool geldigBord;
     vector< pair<int,int> > vZetten;
 
+    //returned het aantal punten dat gehaald wordt met de gegeven coords
+    int verwerkZet(pair<int,int> coords);
 
-  // TODO: uw eigen private memberfuncties en -variabelen
+    //geeft aan of de gegeven zet gedaan mag worden
+    bool magZet(pair<int,int> coords);
 
+    //geeft aan of het bord vol is
+    bool bordVol ();
+
+    //recursieve functie van de recursieve methode van bepaalminmax
+    void bepaalMiniMaxiScoreRec_p (int &mini, long long &volgordesMini,
+                                 int &maxi, long long &volgordesMaxi, clock_t tijd1);
+
+    //vult de tabel met default waardes, en vult de beginpositie (verbwaardes)
+    void vulTabelDefault(long long tabel[][5], int getal, int verbWaardes);
+
+    //zet een bepaalde overgang van borden in de tabel
+    void zetInTabel(int getal, int tempGetal, int verschil, 
+                    long long tabel[][5]);
+
+    //de recursieve functie van TD dynamisch programeren van bepaalminmax
+    void bepaalMiniMaxiScoreTD_p (long long tabel[][5], int getal, 
+                                  int verbWaardes, clock_t tijd1);
+
+    //vind de reeks van zetten voor de minimale en maximale score in de array
+    void vindReeksen (int voorlopers[][2], int getal, 
+        vector< pair<int,int> > &zettenReeksMini,
+        vector< pair<int,int> > &zettenReeksMaxi);
 };
 
 #endif
-
-//TODO:
-//-bepaalMiniMaxiScoreRec
-//-bepaalMiniMaxiScoreTD
-//-bepaalMiniMaxiScoreBU
-//-drukAfZettenReeksen
-//-doeExperimenten
-

@@ -5,6 +5,7 @@
 #include "standaard.h"
 #include "azul.h"
 #include <limits.h>
+#include <ctime>
 using namespace std;
 
 Azul::Azul ()
@@ -33,15 +34,11 @@ Azul::Azul (int nwHoogte, int nwBreedte)
 
 Azul::~Azul ()
 {
-  // TODO: implementeer zo nodig deze destructor
-
+  //Deze code heeft (als het goed is) geen deconstructor nodig.
+  //Er is geen "new" gebruikt en alle 2 dimensionale arrays zijn
+  //zo gedeclareerd dat de compiler deze netjes opruimt. Verder
+  //zijn er geen aparte classes gebruikt.
 }  // destructor
-
-
-void Azul::testFunctie()
-{
-  totaalScore = 0;
-}
 
 int Azul::getVakje (int rij, int kolom)
 { 
@@ -214,8 +211,9 @@ bool Azul::bepaalMiniMaxiScoreRec (int &mini, long long &volgordesMini,
     //We hebben een manier nodig om alle bedekkingen van het bord af te gaan
     //Deze aanroep is de eerste, initialiseren de waardes,roepen de functie 
     //aan en returnen de waardes:
+    clock_t tijd1 = clock();
     mini = INT_MAX; maxi = 0; volgordesMini = 0; volgordesMaxi = 0;
-    bepaalMiniMaxiScoreRec_p(mini, volgordesMini, maxi, volgordesMaxi);
+    bepaalMiniMaxiScoreRec_p(mini, volgordesMini, maxi, volgordesMaxi, tijd1);
     return true;
   }// if
   cout << "geen geldig bord" << endl;
@@ -224,8 +222,14 @@ bool Azul::bepaalMiniMaxiScoreRec (int &mini, long long &volgordesMini,
 }  // bepaalMiniMaxiScoreRec
 
 void Azul::bepaalMiniMaxiScoreRec_p (int &mini, long long &volgordesMini,
-                                   int &maxi, long long &volgordesMaxi)
+                                     int &maxi, long long &volgordesMaxi, 
+                                     clock_t tijd1)
 {
+  clock_t tijd2 = clock();
+  if((((double)(tijd2-tijd1))/CLOCKS_PER_SEC) > 300){
+    mini = -1;//basiswaarde die gecheckt wordt voor tijd groter dan 5 minuten
+    return;
+  }
   if(bordVol()){
     if(totaalScore == maxi){
       volgordesMaxi++;
@@ -247,8 +251,9 @@ void Azul::bepaalMiniMaxiScoreRec_p (int &mini, long long &volgordesMini,
     for(int j = 0; j < breedte; j++){
       if(magZet(make_pair(i,j))){
         doeZet(i,j);
-        bepaalMiniMaxiScoreRec_p(mini, volgordesMini, maxi, volgordesMaxi);
+        bepaalMiniMaxiScoreRec_p(mini,volgordesMini,maxi,volgordesMaxi,tijd1);
         unDoeZet();
+        if(mini == -1){return;}
       }// if
     }// for
   }// for
@@ -278,6 +283,7 @@ bool Azul::bepaalMiniMaxiScoreTD (int &mini, long long &volgordesMini,
     int getal = (1<<grootte) - 1; //binaire waarde van het bord, grootte van:
     long long tabel[getal+1][5];// mini-volgordesmini-maxi-volgordes maxi-gehad
     int verbWaardes = 0;//gaat het binaire getal van het huidige bord bevatten
+    clock_t tijd1 = clock();
     for(int i = 0; i < hoogte; i++){// we vullen eerst het hele bord
       for(int j = 0; j < breedte; j++){
         if(!bord[i][j]){
@@ -293,7 +299,7 @@ bool Azul::bepaalMiniMaxiScoreTD (int &mini, long long &volgordesMini,
     //we geven de tabel default waardes en de startwaardes
     vulTabelDefault(tabel, getal, verbWaardes);
     //recursieve aanroep vult de tabel in
-    bepaalMiniMaxiScoreTD_p (tabel,getal,verbWaardes);
+    bepaalMiniMaxiScoreTD_p (tabel,getal,verbWaardes, tijd1);
     //zetten netjes ongedaan maken
     for(int i = 0; i < teller; i++){
       unDoeZet();
@@ -313,7 +319,6 @@ void Azul::zetInTabel (int getal, int tempGetal, int verschil,
                        long long tabel[][5])
 {
   if(tabel[tempGetal][2] + verschil > tabel[getal][2]){
-    cout << kleurGroen << "update maxi" << kleurWit << endl;
     tabel[getal][2] = tabel[tempGetal][2] + verschil;//tabeldata updaten
     tabel[getal][3] = tabel[tempGetal][3]; //aantal manieren updaten
   }// if
@@ -323,7 +328,6 @@ void Azul::zetInTabel (int getal, int tempGetal, int verschil,
   }// else if
   //analoog voor minimum, waardes in tabel zijn INT_MAX als default waarde
   if(tabel[tempGetal][0] + verschil < tabel[getal][0]){
-    cout << kleurRood << "update mini" << kleurWit << endl;
     tabel[getal][0] = tabel[tempGetal][0] + verschil;
     tabel[getal][1] = tabel[tempGetal][1]; 
   }// if
@@ -332,8 +336,14 @@ void Azul::zetInTabel (int getal, int tempGetal, int verschil,
   }// else if
 }  // zetInTabel
 
-void Azul::bepaalMiniMaxiScoreTD_p (long long tabel[][5], int getal, int verbWaardes)
+void Azul::bepaalMiniMaxiScoreTD_p (long long tabel[][5], int getal, 
+                                    int verbWaardes, clock_t tijd1)
 {
+  clock_t tijd2 = clock();
+  if((((double)(tijd2-tijd1))/CLOCKS_PER_SEC) > 300){
+    tabel[getal][0] = -1;//basiswaarde voor tijd groter dan 5 minuten
+    return;
+  }
   int tempGetal;//bord waarmee vergeleken wordt
   int pos;// positie in binaire getal
   int verschil;//waarde van een zet tussen de borden getal en tempGetal
@@ -346,9 +356,10 @@ void Azul::bepaalMiniMaxiScoreTD_p (long long tabel[][5], int getal, int verbWaa
         if(tabel[tempGetal][4] != 1){// als deze stand nog niet verwerkt is
           bord[i][j] = false; //"undo zet" voor het huidige vakje
           totaalScore -= verschil;//totaalscore ook updaten
-          bepaalMiniMaxiScoreTD_p(tabel, tempGetal, verbWaardes);
+          bepaalMiniMaxiScoreTD_p(tabel, tempGetal, verbWaardes, tijd1);
           doeZet(i,j);//zet weer terug doen
           vZetten.pop_back();//maar niet opslaan in de vector
+          if(tabel[getal][0] == -1){return;}
         }// if
         //als deze zogenaamde zet + zijn waarde groter is dan dat in de tabel:
         zetInTabel(getal, tempGetal, verschil, tabel);
@@ -358,32 +369,13 @@ void Azul::bepaalMiniMaxiScoreTD_p (long long tabel[][5], int getal, int verbWaa
   tabel[getal][4] = 1;// de waardes hier in de tabel zullen altijd goed zijn.
 }  // bepaalMiniMaxiScoreTD_p
 
-void Azul::drukaftabel(long long tabel[][5]){//testfunctie voor debuggen
-  for(int i = 0; i < (1<<breedte*hoogte); i++){
-    cout << i << ' ';
-    for(int j = 0; j < 5; j++){
-      cout << tabel[i][j] << " ";
-    }
-    cout << endl;
-  }
-}
-
-void Azul::drukaftabel2(int tabel[][2]){//testfunctie voor debuggen
-  for(int i = 0; i < (1<<breedte*hoogte); i++){
-    cout << i << ' ';
-    for(int j = 0; j < 2; j++){
-      cout << tabel[i][j] << " ";
-    }
-    cout << endl;
-  }
-}
-
 bool Azul::bepaalMiniMaxiScoreBU (int &mini, long long &volgordesMini,
                                   int &maxi, long long &volgordesMaxi,
                                   vector< pair<int,int> > &zettenReeksMini,
                                   vector< pair<int,int> > &zettenReeksMaxi)
 {
   if(geldigBord){
+    clock_t tijd1, tijd2;
     int grootte = hoogte*breedte;//aantal vakjes
     int getal = (1<<grootte) - 1;//aantal rijen van de tabel
     long long tabel[getal+1][5];// mini-volgordesmini-maxi-volgordes maxi-gehad
@@ -398,6 +390,7 @@ bool Azul::bepaalMiniMaxiScoreBU (int &mini, long long &volgordesMini,
     vector <int> aantalTegels[grootte+1];//de index representeert het aantal
                                          //gelegde tegels voor een bepaald bord
     bool toegestaan;//gaat checken of een te evalueren zet wel nodig is
+    tijd1 = clock();
     for(int i = 0; i < hoogte; i++){//(aantal) verbodenwaardes initialiseren
       for(int j = 0; j < breedte; j++){
         if(bord[i][j]){
@@ -428,6 +421,11 @@ bool Azul::bepaalMiniMaxiScoreBU (int &mini, long long &volgordesMini,
     //vast en kan deze gebruikt worden voor een stap verder in aantalTegels
     for(int i = aantalVerbWaardes+1; i <= grootte; i++){//itereren over aantalTegels[i]
       for(int j = 0; j < aantalTegels[i].size(); j++){// een binair getal met i tegels
+        tijd2 = clock();
+        if((((double)(tijd2-tijd1))/CLOCKS_PER_SEC) > 300){
+          mini = -1;
+          return false;
+        }
         getalMet = aantalTegels[i].at(j);
         teller = 0;
         toegestaan = true;
@@ -478,7 +476,6 @@ bool Azul::bepaalMiniMaxiScoreBU (int &mini, long long &volgordesMini,
     volgordesMaxi = tabel[getal][3];
     //nu tabel af is de reeksen vinden
     vindReeksen(voorlopers, getal, zettenReeksMini, zettenReeksMaxi);
-    drukaftabel2(voorlopers);
     return true;
   }
   else{//bord was niet geldig
@@ -545,70 +542,3 @@ void Azul::drukAfZettenReeksen (vector<pair <int,int> > &zettenReeksMini,
   cout << endl;
   zettenReeksMini.clear(); zettenReeksMaxi.clear();//vectoren legen
 }  // drukAfZettenReeksen
-
-
-
-
-
-
-
-
-// int evaluatieBord = getal;// wordt het bord waar we vanuit werken, eerst vol
-//   int k;//k gaat door de bits van evaluatiebord lopen
-//   int waardeCheck;//huidige te evalueren bord (met -1 tegel tov evaluatiebord)
-//   int huidigeBesteVerschil;//beste voor mini/maxi, dus slechtste voor mini
-//   int potentieelVerschil;
-//   int huidigeBesteZet; //deze zet wordt opgeslagen als een binair getal
-//   pair<int,int> huidigeBesteCoords;
-//   //eerst zettenReeksMaxi:
-//   while(evaluatieBord != verbWaardes){//itereren over de borden
-//     cout <<"evaluatieBord is ";
-//     cout << evaluatieBord << endl;
-//     k = 0;//weer vooraan beginnen
-//     huidigeBesteVerschil = 0;//we zoeken een verse nieuwe beste waarde
-//     while(k < hoogte*breedte){//itereren over de bits van evaluatiebord
-//       if((evaluatieBord>>k) % 2 == 1 && (verbWaardes>>k) % 2 != 1){
-//         //waarde bekijken bij getal als bit k van evaluatieBord 0 was:
-//         waardeCheck = evaluatieBord & ~(1<<k);
-//         cout << "waardeCheck is ";
-//         cout << waardeCheck << endl;
-//         cout << "huidigeBesteVerschil is ";
-//         cout << huidigeBesteVerschil << endl;
-//         potentieelVerschil = tabel[evaluatieBord][2] - tabel[waardeCheck][2];
-//         cout << "potentieelVerschil is ";
-//         cout << potentieelVerschil << endl;
-//         if(potentieelVerschil > huidigeBesteVerschil){//kijken of de zet beter is
-//           huidigeBesteVerschil = potentieelVerschil;//nieuwe drempel
-//           huidigeBesteZet = waardeCheck;
-//           huidigeBesteCoords.first = k / breedte;//nieuwe coordinaat opslaan
-//           huidigeBesteCoords.second = k % breedte;        }
-//       }
-//       k++;
-//     }
-//     zettenReeksMaxi.insert(zettenReeksMaxi.begin(), huidigeBesteCoords);
-//     evaluatieBord = huidigeBesteZet;
-//   }
-//   cout << "klaar met maxi, nu mini" << endl;
-//   drukaftabel(tabel);
-//   evaluatieBord = getal;
-//   //nu zettenreeksMini
-//   while(evaluatieBord != verbWaardes){//itereren over de borden
-//     k = 0;//weer vooraan beginnen
-//     huidigeBesteVerschil = INT_MAX;//we zoeken een verse nieuwe slechste waarde
-//     while(k < hoogte*breedte){//itereren over de bits van evaluatiebord
-//       if((evaluatieBord>>k) % 2 == 1 && (verbWaardes>>k) % 2 != 1){
-//         //waarde bekijken bij getal als bit k van evaluatieBord 0 was:
-//         waardeCheck = evaluatieBord & ~(1<<k);
-//         if(tabel[evaluatieBord][0] - tabel[waardeCheck][0]
-//            < huidigeBesteVerschil){//kijken of de zet beter is
-//           huidigeBesteVerschil = tabel[waardeCheck][2];//nieuwe drempel
-//           cout << "nieuw beste bord gevonden, huidigeBesteZet wordt " << waardeCheck << endl;
-//           huidigeBesteZet = waardeCheck;
-//           huidigeBesteCoords.first = k / breedte;//nieuwe coordinaat opslaan
-//           huidigeBesteCoords.second = k % breedte;        }
-//       }
-//       k++;
-//     }
-//     zettenReeksMini.insert(zettenReeksMini.begin(), huidigeBesteCoords);
-//     evaluatieBord = huidigeBesteZet;
-//   }

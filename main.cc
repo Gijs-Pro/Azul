@@ -40,7 +40,6 @@ int keuzeUitMenu ()
        << endl;
   cout << "  (bottom-up DP)" << endl;
   cout << "6. Stoppen met dit spel" << endl;
-  cout << "7. Debuggen van de code" << endl;
   cout << endl;
   cout << "Maak een keuze: ";
   cin >> keuze;
@@ -91,7 +90,6 @@ void menuVoorBord (Azul *a1)
   long long volgordesMini, volgordesMaxi;
   clock_t t1, t2;
   vector <pair <int,int> > zettenReeksMini, zettenReeksMaxi;
-
   hoogte = a1->getHoogte();
   breedte = a1->getBreedte();
 
@@ -130,8 +128,6 @@ void menuVoorBord (Azul *a1)
                      maxi, volgordesMaxi, zettenReeksMini, zettenReeksMaxi);
               break;
       case 6: break;
-      case 7: a1 -> testFunctie();
-              break;
       default: cout << "Voer een goede keuze in!" << endl;
     }  // switch
     t2 = clock ();
@@ -165,13 +161,60 @@ void doeExperimenten ()
   while (keuze!=4)
   {
     keuze = keuzeUitMenu2 ();
-
-    // TODO: doe het experiment voor de gekozen manier om minimale
-    //   en maximale scores te bepalen
-
-  }  // while
-
-}  // doeExperimenten
+    clock_t t1, t2;
+    int grens;
+    int i = 2;//start dimensies van borden
+    int j = 2;
+    Azul *a1;
+    int mini, maxi;
+    long long volgordesMini, volgordesMaxi;
+    vector <pair <int,int> > zettenReeksMini, zettenReeksMaxi;
+    //we kunnen maar tot 4x4 borden, want een 5x4 gebruikt te veel geheugen.
+    //dit in verband met het bijhouden van de long long waardes van
+    //volgordesMini en volgordesMaxi (er is geprobeerd de tabel op te splitsen
+    //in eentje voor de volgordes (long long dus) en eentje voor de scores
+    //(int dus) maar ook hier kwam een segmentation fault). De oplossing volgens
+    //ons is om de code compleet te herschrijven met een vector in een vector
+    //als tabel, maar dit konden we niet voor elkaar krijgen.
+    //voor recursief werkt 4x4 natuurlijk wel.
+    if(keuze == 1){
+      grens = 5;
+    }// if
+    else{
+      grens = 4;
+    }// else
+    while( i != grens+1){
+      a1 = new Azul (i, j);
+      t1 = clock();
+      if(keuze == 1){
+        a1->bepaalMiniMaxiScoreRec(mini, volgordesMini, maxi, volgordesMaxi);
+      } // if
+      if(keuze == 2){
+        a1->bepaalMiniMaxiScoreTD(mini, volgordesMini, maxi, volgordesMaxi);
+      } // if
+      if(keuze == 3){
+        a1->bepaalMiniMaxiScoreBU(mini, volgordesMini, maxi, volgordesMaxi,
+                                  zettenReeksMini, zettenReeksMaxi);
+      } // if
+      t2 = clock();
+      if(mini == -1){//return die de functies geven als ze te lang duren
+        cout << "dit experiment voor een " << i << "x" << j << " bord";
+        cout << " duurde langer dan 5 minuten." << endl;
+      } // if
+      else{
+        cout << "Voor een " << i << "x" << j << " bord kregen we: " << endl;
+        cout << "mini = " << mini << endl;
+        cout << "volgordesMini = " << volgordesMini << endl;
+        cout << "maxi = " << maxi << endl;
+        cout << "volgordesMaxi = " << volgordesMaxi << endl;
+        cout << "Dit kostte " << (t2-t1) << " clock ticks, ofwel "
+             << (((double)(t2-t1))/CLOCKS_PER_SEC) << " seconden." << endl;
+      } // else
+      if(i == j){i++;}
+      else{j++;}
+    } // while
+  } // while
+} // doeExperimenten
 
 void hoofdmenu ()
 { Azul *a1;  // pointer, om makkeijk nieuwe objecten te kunnen maken
